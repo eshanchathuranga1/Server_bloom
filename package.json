@@ -7,7 +7,7 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "nodemon --ignore store/ src/app.js"
+    "test": "nodemon --ignore src/store/ src/app.js"
   },
   "dependencies": {
     "@hapi/boom": "^10.0.1",
@@ -32,6 +32,8 @@
     "@controllers": "src/controllers",
     "@utils": "src/utils",
     "@store": "src/store",
-    "@sockets": "src/sockets"
+    "@sockets": "src/sockets",
+    "@whatsapp": "src/whatsapp",
+    "@handlers": "src/whatsapp/handlers"
   }
 }

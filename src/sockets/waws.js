@@ -1,7 +1,6 @@
 const { set } = require("mongoose");
 
 const waws = async(socket) => {
-    global.sockets = socket; // Assign the socket instance to a global variable for easy access
     console.log('WAWs socket connected', socket.userId); // Log the connection event
 
     socket.on('disconnect', () => { // Handle disconnection event
@@ -14,6 +13,18 @@ const waws = async(socket) => {
         // Process the message and send a response if needed
         socket.emit('message', { message: 'Message received' }); // Send a response back to the client
     });
+
+    const ev = global.ev; // Access the global event emitter
+    ev.on('code', (data) => { // Listen for 'next' events
+        socket.emit('whatsapp', data); // Emit the event to the socket client
+    });
+
+    socket.on('reqwa', (data) => {
+        console.log('Send to ev:', data); // Log the received event
+        ev.emit('whatsapp', data); // Emit the event to the socket client
+    });
+
+    
 
     
     

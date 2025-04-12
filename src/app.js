@@ -12,13 +12,22 @@ require('dotenv').config(); // Load environment variables from .env file
 
 const {verifyAccessToken} = require('@utils/jwt_utils'); // Import JWT utility functions
 
+const whatsapp = require('@whatsapp/connect'); // Import the WhatsApp connection function
+
 
 const Store = require('@store/store'); // Import the Store class
 global.store = new Store(); // Create an instance of the Store class
 const store = global.store; // Assign the store instance to a global variable for easy access
 
+// create a global variable for the socket
+global.socket = {
+    isOnline: false, // Flag to indicate if the socket is online
+    socket: null, // Placeholder for the socket instance
+}
+
 // Define a global event emitter for handling events
 global.ev = new EventEmitter(); // Create a new EventEmitter instance
+global.ev.setMaxListeners(0); // Set the maximum number of listeners to 0 (unlimited)
 
 
 
@@ -121,4 +130,7 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => { // Use the HTTP server to listen
     console.log(`Server is running on port ${PORT}`);
+    const sock =  whatsapp()
+    global.sock = sock; // Assign the socket instance to the global variable
+
 });
