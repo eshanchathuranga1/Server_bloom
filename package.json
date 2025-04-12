@@ -32,6 +32,7 @@
     "@controllers": "src/controllers",
     "@utils": "src/utils",
     "@store": "src/store",
-    "@sockets": "src/sockets"
+    "@sockets": "src/sockets",
+    "@events": "src/events"
   }
 }
