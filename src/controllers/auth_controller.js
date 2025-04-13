@@ -15,7 +15,7 @@ const {
   changeTokens,
   addTokenBlacklist,
   addUserBlacklist,
-} = require("@utils/mongoDB"); // Import MongoDB utility functions
+} = require("@utils/mongo.databas"); // Import MongoDB utility functions
 module.exports = {
   login: async function (req, res, next) {
     console.log("Login request received!\n PROCESSING....");

@@ -7,7 +7,7 @@ module.exports = {
             const payload = { aud: userId }; // Payload for the token
             const secretKey = process.env.JWT_ACCESS_SECRET_KEY;
             const options = {
-                expiresIn: '30d', // Token expiration time
+                expiresIn: '1h', // Token expiration time
                 issuer: 'yourdomain.com', // Issuer of the token
             };
             JWT.sign(payload, secretKey, options, (err, token) => {
