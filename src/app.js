@@ -11,10 +11,11 @@ require('module-alias/register'); // Register module aliases for cleaner imports
 require('dotenv').config(); // Load environment variables from .env file
 
 const {verifyAccessToken} = require('@utils/jwt_utils'); // Import JWT utility functions
+const color = require('@utils/terminal_colors')
 
 
-const realtimeDatabase = require('@utils/firebase')
-const db = new realtimeDatabase()
+const realtimeDatabase = require('@utils/firebase'); // Import therealtime database module
+const db = new realtimeDatabase(); // Create a new instance of the database
 
 
 // Define a global event emitter for handling events
@@ -118,7 +119,23 @@ app.use((err, req, res, next) => {
 })
 
 // Start the server
+// Initialize global config with empty object
+let config;
+
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => { // Use the HTTP server to listen
-    console.log(`Server is running on port ${PORT}`);
+server.listen(PORT, async () => { // Use the HTTP server to listen
+    console.log(color('Server listen in : ').red().bold().toString() + color(`http://localhost:${PORT}`).blue().bold().toString());
+    await db.getData('configurations', ev, data=> {
+        console.log(color("Checking existing loggin...").red().bold().toString())
+        config = data;
+        if (!data.whatsapp.connections.isLoggedIn) {
+            console.log(color("Logged Out").red().bold().toString())
+        } else {
+            console.log(color(`{ +${data.whatsapp.connections.account.number} } Logged in already!`).green().bold().toString())
+            // add whatsapp connections
+        }
+        
+    }) 
+
+
 });
