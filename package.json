@@ -12,9 +12,11 @@
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "baileys": "^6.7.16",
+    "chalk": "^5.4.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
+    "firebase": "^11.6.0",
     "helmet": "^8.1.0",
     "http": "^0.0.1-security",
     "http-errors": "^2.0.0",
@@ -33,6 +35,7 @@
     "@utils": "src/utils",
     "@store": "src/store",
     "@sockets": "src/sockets",
-    "@events": "src/events"
+    "@events": "src/events",
+    "@types": "src/types"
   }
 }
