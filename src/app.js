@@ -18,8 +18,9 @@ const realtimeDatabase = require('@utils/firebase'); // Import therealtime datab
 const db = new realtimeDatabase(); // Create a new instance of the database
 
 
-// Define a global event emitter for handling events
+const connect = require('@whatsapp/connect')
 const ev = new EventEmitter(); // Create a new EventEmitter instance
+ev.setMaxListeners(0); // Set the maximum number of listeners for the EventEmitter instance to 0
 
 
 
@@ -133,6 +134,11 @@ server.listen(PORT, async () => { // Use the HTTP server to listen
         } else {
             console.log(color(`{ +${data.whatsapp.connections.account.number} } Logged in already!`).green().bold().toString())
             // add whatsapp connections
+            try {
+                connect(ev, db)
+            } catch (error) {
+                console.log(error)
+            }
         }
         
     }) 
