@@ -13,12 +13,12 @@ require('dotenv').config(); // Load environment variables from .env file
 const {verifyAccessToken} = require('@utils/jwt_utils'); // Import JWT utility functions
 
 
-const Store = require('@store/store'); // Import the Store class
-global.store = new Store(); // Create an instance of the Store class
-const store = global.store; // Assign the store instance to a global variable for easy access
+const realtimeDatabase = require('@utils/firebase')
+const db = new realtimeDatabase()
+
 
 // Define a global event emitter for handling events
-global.ev = new EventEmitter(); // Create a new EventEmitter instance
+const ev = new EventEmitter(); // Create a new EventEmitter instance
 
 
 
@@ -97,7 +97,7 @@ app.use('/api/auth', AuthRoutes); // Use authentication routes
 
 const whatsappSocket = io.of('/waws'); 
 whatsappSocket.use(authenticateSocket);
-whatsappSocket.on('connection', waws);
+whatsappSocket.on('connection', (socket)=> waws(socket, ev));
 
 
 
