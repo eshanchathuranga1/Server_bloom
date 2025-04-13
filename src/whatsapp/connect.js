@@ -6,18 +6,12 @@ const {
 } = require("baileys");
 const { default: pino } = require("pino");
 
-const TYPES = require("@types/events");
-
 const connectionHandler = require("./handlers/connection_handler");
 const store = makeInMemoryStore({
   logger: pino().child({ level: "silent", stream: "store" }),
 });
 
-async function connect(sev, db) {
-  if (!sev || typeof sev.emit !== "function") {
-    throw new Error("Invalid EventEmitter passed to WhatsApp connect function");
-  }
-
+async function connect(ev, db) {
   try {
     const { state, saveCreds } = await useMultiFileAuthState(
       "./src/store/whatsapp"
@@ -28,17 +22,9 @@ async function connect(sev, db) {
       auth: state,
       printQRInTerminal: true,
     });
-    sock.ev.on("connection.update", (update) => {
-      connectionHandler(update, sock,  sev, db);
-      sev.on(TYPES.WATSAPP_CONNECTION, (data) => {
-        let {type, restartRequired} = data;
-        if (type === 'close') {
-          if (restartRequired) {
-            connect(sev, db);
-          }
-        }
-      });
-    });
+    sock.ev.on("connection.update", (update) =>
+      connectionHandler(update, sock, connect, ev, db)
+    );
 
     sock.ev.on("creds.update", saveCreds);
   } catch (error) {

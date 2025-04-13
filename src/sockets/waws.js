@@ -3,34 +3,17 @@ const { set } = require("mongoose");
 const TYPES = require('@types/events.js')
 
 
-const connectWhatsApp = require('@whatsapp/connect');
-
 const waws = async(socket, ev) => {
-    if (!ev || typeof ev.emit !== 'function') {
-        throw new Error('Invalid EventEmitter passed to WAWs socket');
-    }
+    console.log('WAWs socket connected', socket.userId); // Log the connection event
 
-    console.log('WAWs socket connected', socket.userId);
-
-    // Initialize WhatsApp connection with the socket's EventEmitter
-    try {
-        await connectWhatsApp(ev, null); // Pass ev as sev parameter
-    } catch (error) {
-        console.error('WhatsApp connection failed:', error);
-        socket.emit(TYPES.SYSTEM_ERROR, {
-            type: 'error',
-            level: 'error',
-            error: error.message
-        });
-    }
-
-    socket.on('disconnect', () => {
-        console.log('WAWs socket disconnected', socket.userId);
+    socket.on('disconnect', () => { // Handle disconnection event
+        console.log('WAWs socket disconnected', socket.userId); // Log the disconnection event
     });
 
-    socket.on('message', (data) => {
-        console.log('Received message:', data);
-        socket.emit('message', { message: 'Message received' });
+    socket.on('message', (data) => { // Handle incoming messages from the socket
+        console.log('Received message:', data); // Log the received message
+        // Process the message and send a response if needed
+        socket.emit('message', { message: 'Message received' }); // Send a response back to the client
     });
 
     ev.on(TYPES.WATSAPP_CONNECTION, (data) => {

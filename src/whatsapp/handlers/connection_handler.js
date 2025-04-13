@@ -9,13 +9,11 @@ const TYPES = require("@types/events");
 const path = require("path");
 const fs = require("fs");
 
-
 module.exports = async (update, sock, connect, sev, db) => {
   try {
-    
     const { connection, lastDisconnect, qr } = update;
     if (qr) {
-      sev.emit(TYPES.WATSAPP_CONNECTION, {
+      ev.emit(TYPES.WATSAPP_CONNECTION, {
         type: "connection",
         option: "qr",
         level: "data",
@@ -31,7 +29,6 @@ module.exports = async (update, sock, connect, sev, db) => {
           type: "close",
           levels: "error",
           reason: "bas.session",
-          restartRequired: false,
         });
         await deleteSessions();
       } else if (reason === DisconnectReason.connectionClosed) {
@@ -39,23 +36,20 @@ module.exports = async (update, sock, connect, sev, db) => {
           type: "close",
           levels: "error",
           reason: "connectionClosed",
-          restartRequired: true
         });
-        // Let baileys handle reconnection automatically
+        connect();
       } else if (reason === DisconnectReason.connectionLost) {
         res({
           type: "close",
           levels: "error",
           reason: "connectionLost",
-          restartRequired: true
         });
-        // Let baileys handle reconnection automatically
+        connect();
       } else if (reason === DisconnectReason.connectionReplaced) {
         res({
           type: "close",
           levels: "error",
           reason: "connectionReplaced",
-          restartRequired: false,
         });
         await deleteSessions();
       } else if (reason === DisconnectReason.forbidden) {
@@ -63,7 +57,6 @@ module.exports = async (update, sock, connect, sev, db) => {
           type: "close",
           levels: "error",
           reason: "forbidden",
-          restartRequired: false,
         });
         await deleteSessions();
       } else if (reason === DisconnectReason.loggedOut) {
@@ -71,7 +64,6 @@ module.exports = async (update, sock, connect, sev, db) => {
           type: "close",
           levels: "error",
           reason: "loggedOut",
-          restartRequired: false,
         });
         await deleteSessions();
       } else if (reason === DisconnectReason.multideviceMismatch) {
@@ -79,7 +71,6 @@ module.exports = async (update, sock, connect, sev, db) => {
           type: "close",
           levels: "error",
           reason: "multideviceMismatch",
-          restartRequired: false,
         });
         await deleteSessions();
       } else if (reason === DisconnectReason.restartRequired) {
@@ -87,38 +78,22 @@ module.exports = async (update, sock, connect, sev, db) => {
           type: "close",
           levels: "error",
           reason: "restartRequired",
-          restartRequired: true
         });
-        // Let baileys handle reconnection automatically
+        connect();
       } else if (reason === DisconnectReason.timedOut) {
         res({
           type: "close",
           levels: "error",
           reason: "timedOut",
-          restartRequired: true
         });
-        // Let baileys handle reconnection automatically
+        connect();
       } else if (reason === DisconnectReason.unavailableService) {
         res({
           type: "close",
           levels: "error",
           reason: "unavailableService",
-          restartRequired: true
         });
-        // Let baileys handle reconnection automatically
-      }
-
-      async function res(data) {
-        sev.emit(TYPES.WATSAPP_CONNECTION, data);
-      }
-      async function deleteSessions(params) {
-        // Delete /store/whatsapp
-        const dir = path.join(__dirname, "..", "..", "store", "whatsapp");
-        try {
-          fs.rmdirSync(dir, { recursive: true });
-        } catch (error) {
-          throw error;
-        }
+        connect();
       }
     } else if (connection === "open") {
       res({
@@ -132,13 +107,10 @@ module.exports = async (update, sock, connect, sev, db) => {
       });
     }
 
-    
-
-
 
   } catch (error) {
     console.log(error);
-    sev.emit(TYPES.SYSTEM_ERROR, {
+    ev.emit(TYPES.SYSTEM_ERROR, {
       type: "error",
       level: "error",
       error: error,
@@ -146,5 +118,16 @@ module.exports = async (update, sock, connect, sev, db) => {
     });
   }
 
-  
+  async function res(data) {
+    sev.emit(TYPES.WATSAPP_CONNECTION, data);
+  }
+  async function deleteSessions(params) {
+    // Delete /store/whatsapp
+    const dir = path.join(__dirname, "src", "store", "whatsapp");
+    try {
+      fs.rmdirSync(dir, { recursive: true });
+    } catch (error) {
+      throw error;
+    }
+  }
 };
