@@ -16,7 +16,7 @@ const waws = async(socket, ev) => {
         socket.emit('message', { message: 'Message received' }); // Send a response back to the client
     });
 
-    ev.on('test', (data) => {
+    ev.on(TYPES.WATSAPP_CONNECTION, (data) => {
         console.log('WATSAPP_CONNECTION', data);
         socket.emit(TYPES.WATSAPP_CONNECTION, data);
     });
