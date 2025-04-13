@@ -5,7 +5,7 @@ const helmet = require('helmet');
 const createError = require('http-errors');
 const http = require('http');
 const socketIo = require('socket.io');
-const EventEmitter = require('events'); // Import EventEmitter for event handling
+
 
 require('module-alias/register'); // Register module aliases for cleaner imports
 require('dotenv').config(); // Load environment variables from .env file
@@ -17,9 +17,11 @@ const color = require('@utils/terminal_colors')
 const realtimeDatabase = require('@utils/firebase'); // Import therealtime database module
 const db = new realtimeDatabase(); // Create a new instance of the database
 
+const EventEmitter = require('events');
+const ev = new EventEmitter(); // Create a new event emitter instance
+ev.setMaxListeners(0)
 
-// Define a global event emitter for handling events
-const ev = new EventEmitter(); // Create a new EventEmitter instance
+const whatsapp = require('@whatsapp/connect')
 
 
 
@@ -124,15 +126,20 @@ let config;
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, async () => { // Use the HTTP server to listen
-    console.log(color('Server listen in : ').red().bold().toString() + color(`http://localhost:${PORT}`).blue().bold().toString());
+    console.log(color.blue.bold("Server is listen in : ") + color.white.bold(`http://localhost:${PORT}`));
     await db.getData('configurations', ev, data=> {
-        console.log(color("Checking existing loggin...").red().bold().toString())
+        console.log(color.blue.bold("Checking for existing configurations..."));
         config = data;
         if (!data.whatsapp.connections.isLoggedIn) {
-            console.log(color("Logged Out").red().bold().toString())
+            console.log(color.red("No whatsapp login!"))
         } else {
-            console.log(color(`{ +${data.whatsapp.connections.account.number} } Logged in already!`).green().bold().toString())
+            console.log(color.yellow(`{ +${data.whatsapp.connections.account.number} } Logged in already!`))
             // add whatsapp connections
+            try {
+                whatsapp(ev, db);
+            } catch (error) {
+                console.log(error)
+            }
         }
         
     }) 

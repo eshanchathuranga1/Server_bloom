@@ -1,5 +1,8 @@
 const createError = require('http-errors'); // Import HTTP error handling library
 const {verifyAccessToken,verifySocketAccessToken} = require('@utils/jwt_utils'); // Import JWT utility functions
+const {
+    getUser,
+  } = require("@utils/mongoDB");
 module.exports = {
     authenticateSocket: async(socket, next) => {
         const token = socket.handshake.headers['authorization']; // Get the access token from headers
@@ -13,7 +16,7 @@ module.exports = {
         const accessToken = tokenParts[1]; // Extract the access token
         try {
             const payload = await verifySocketAccessToken(accessToken); // Verify the access token
-            const user = await global.store.get(global.store.getById(payload.aud)) // Get user data from the store using the user ID in the token
+            const user = await getUser(payload.aud)
             if (!user) {
                 return next(createError.Unauthorized('User not found')); // Handle user not found
             }

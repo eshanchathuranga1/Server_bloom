@@ -15,11 +15,19 @@ const waws = async(socket, ev) => {
         // Process the message and send a response if needed
         socket.emit('message', { message: 'Message received' }); // Send a response back to the client
     });
-
+    
+    socket.on('request', (data) => {
+        ev.emit('request', data)
+    });
     ev.on(TYPES.WATSAPP_CONNECTION, (data) => {
         console.log('WATSAPP_CONNECTION', data);
         socket.emit(TYPES.WATSAPP_CONNECTION, data);
     });
+
+    ev.on(TYPES.SYSTEM_ERROR, (data) => {
+        console.log('SYSTEM_ERROR', data);
+        socket.emit(TYPES.SYSTEM_ERROR, data);
+        });
 
     
     

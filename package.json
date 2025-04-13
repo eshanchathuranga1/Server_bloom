@@ -26,6 +26,7 @@
     "mongoose": "^8.13.2",
     "morgan": "^1.10.0",
     "pino": "^9.6.0",
+    "qrcode-terminal": "^0.12.0",
     "socket.io": "^4.8.1"
   },
   "_moduleAliases": {
@@ -36,6 +37,8 @@
     "@store": "src/store",
     "@sockets": "src/sockets",
     "@events": "src/events",
-    "@types": "src/types"
+    "@types": "src/types",
+    "@handlers": "src/whatsapp/handlers",
+    "@whatsapp": "src/whatsapp"
   }
 }
