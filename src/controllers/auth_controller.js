@@ -16,9 +16,10 @@ const {
   addTokenBlacklist,
   addUserBlacklist,
 } = require("@utils/mongo.databas"); // Import MongoDB utility functions
+const logger = require("@utils/logger"); // Import logger utility
 module.exports = {
   login: async function (req, res, next) {
-    console.log("Login request received!\n PROCESSING....");
+    logger.info("Incomming login request");
     try {
       if (!req.body) {
         throw createError.BadRequest("Request body is required");
@@ -67,7 +68,7 @@ module.exports = {
     }
   },
   refreshToken: async function (req, res, next) {
-    console.log("Refresh token request received!\n PROCESSING....");
+    logger.info("Incomming refresh token request");
     try {
       if (!req.body) {
         throw createError.BadRequest("Request body is required");
@@ -126,7 +127,7 @@ module.exports = {
     }
   },
   logout: async function (req, res, next) {
-    console.log("Logout request received!\n PROCESSING....");
+    logger.info("Incomming logout request");
     try {
       if (!req.body) {
         throw createError.BadRequest("Request body is required");

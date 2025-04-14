@@ -1,8 +1,10 @@
 const createError = require("http-errors"); // Import HTTP error handling library
 const { verifySocketAccessToken } = require("@utils/jwt_utils"); // Import JWT utility functions
 const { getUser } = require("@utils/mongo.databas");
+const logger = require("@utils/logger"); // Import logger utility
 module.exports = {
   authenticateSocket: async (socket, next) => {
+    logger.info("Running web socket authentication process...")
     const token = socket.handshake.headers["authorization"]; // Get the access token from headers
     if (!token) {
       return next(createError.Unauthorized("Token not provided")); // Handle missing token
@@ -21,7 +23,7 @@ module.exports = {
       socket.userId = payload.aud; // Attach user ID to the socket object
       next(); // Proceed to the next middleware or event handler
     } catch (error) {
-      return next(createError.Unauthorized(error.message)); // Handle token verification errors
+      return next(createError.Unauthorized(error)); // Handle token verification errors
     }
   },
 };
