@@ -1,0 +1,49 @@
+{
+    "targets": [
+      {
+        "account": {
+          "name": "keyg",
+          "number": "1234567890"
+        },
+        "autoDestroy": {
+          "delay": 0,
+          "enable": false
+        },
+        "autoUpdate": {
+          "delay": 60,
+          "enable": true
+        },
+        "gatheringMessages": {
+          "enable": true
+        },
+        "gatheringStatus": {
+          "enable": true
+        }
+      }
+    ],
+    "whatsapp": {
+      "connections": {
+        "account": {
+          "name": "ec dev",
+          "number": 23143234234
+        },
+        "auth": {
+          "qr": "2@pCTtEr+W0FNh9vWu+CM4rrYKRWPOdyYBaCgqzDLElo6E2Yk8CLpGCTjCmpDisbUZa3jdUim6ohfdpoxGImGl+kf+Ljf5+wJV1og=,EZnU3IuPh2FH9rf1x8sfuEv8tJYZ/XduCbQownV3hn0=,kiP7zsPRW6qAcv6dubP9BwV/XRs8huUxQdmZ28Uo5hA=,AkL1Y7BzNaVlpSpVpoplSbXcu0KNHijPgQQlLudpyCM="
+        },
+        "login": {
+          "islogedin": true
+        }
+      },
+      "privacy": {
+        "calladd": "all",
+        "groupadd": "all",
+        "last": "none",
+        "messages": "all",
+        "online": "match_last_seen",
+        "profile": "none",
+        "readreceipts": "all",
+        "status": "none",
+        "stickers": "contacts"
+      }
+    }
+  }

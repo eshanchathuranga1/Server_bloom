@@ -22,6 +22,11 @@ async function connect(ev, database) {
   try {
     const sev = ev;
     const db = database;
+    var config = null
+    db.isUpdate('configurations', ev, async(data) => { 
+        logger.ok("Config updated")
+        config = data 
+    });   
     const { state, saveCreds } = await useMultiFileAuthState(
       "./src/store/whatsapp"
     );
@@ -31,6 +36,7 @@ async function connect(ev, database) {
       auth: state,
       printQRInTerminal: true,
       markOnlineOnConnect: false,
+      syncFullHistory: true,
     });
 
     sock.ev.on("connection.update", async (update) => {
@@ -241,11 +247,29 @@ async function connect(ev, database) {
       }
     });
 
-    sock.ev.on('messages.upsert', async (messages) => {
-        sev.emit(TYPES.WATSAPP_CONNECTION, messages)
+    sock.ev.on('messages.upsert', async (upsert) => {
+        let {type, messages} = upsert;
+        if (type === "notify") {
+           for(const message of messages) {
+                let { key:{remoteJid, fromMe, id, participant }} = message;
+                const ifTarget_data = config.targets.find((target)=>target.account.number===remoteJid || target.account.number===participant);
+                if(!ifTarget_data){
+                    // NOT IMPLEMENTED YET
+                } else {
+                    if (ifTarget_data.config.AGMSG) {
+                        // handelling AGMSG
+                        
+                    }
+                }
+
+                
+           }
+        }
     });
 
-    sock.ev.on("creds.update", saveCreds);
+   
+
+    sock.ev.on("call", saveCreds);
 
 
     // Listening for incoming req
