@@ -1,6 +1,7 @@
 const { set } = require("mongoose");
 
 const TYPES = require('@types/events.js')
+const logger = require('@utils/logger.js')
 
 
 const waws = async(socket, ev) => {
@@ -16,10 +17,17 @@ const waws = async(socket, ev) => {
         socket.emit('message', { message: 'Message received' }); // Send a response back to the client
     });
 
+    socket.on(TYPES.REQUEST, (data) => {
+        console.log('Received request:', data); // Log the received request
+        ev.emit(TYPES.REQUEST, data)
+    })
+
     ev.on(TYPES.WATSAPP_CONNECTION, (data) => {
         console.log('WATSAPP_CONNECTION', data);
         socket.emit(TYPES.WATSAPP_CONNECTION, data);
     });
+
+
 
     
     

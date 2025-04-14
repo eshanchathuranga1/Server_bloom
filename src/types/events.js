@@ -6,4 +6,5 @@ module.exports = {
     SYSTEM_INFO: 'system.info',
     SYSTEM_WARNING: 'system.warning',
     SYSTEM_DEBUG: 'system.debug',
+    REQUEST: 'request',
 }

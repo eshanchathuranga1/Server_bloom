@@ -17,15 +17,18 @@
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "firebase": "^11.6.0",
+    "fs-extra": "^11.3.0",
     "helmet": "^8.1.0",
     "http": "^0.0.1-security",
     "http-errors": "^2.0.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
+    "log-beautify": "^1.2.0",
     "module-alias": "^2.2.3",
     "mongoose": "^8.13.2",
     "morgan": "^1.10.0",
     "pino": "^9.6.0",
+    "qrcode-terminal": "^0.12.0",
     "socket.io": "^4.8.1"
   },
   "_moduleAliases": {
@@ -36,6 +39,7 @@
     "@store": "src/store",
     "@sockets": "src/sockets",
     "@events": "src/events",
-    "@types": "src/types"
+    "@types": "src/types",
+    "@whatsapp": "src/whatsapp"
   }
 }

@@ -76,7 +76,7 @@ class realtimeDatabase extends firebase {
     let { path, data } = params;
     try {
       await update(ref(this.db, path), data);
-      callback(null, {
+      callback({
         status: "success",
         message: "Data updated successfully",
       });
@@ -86,8 +86,7 @@ class realtimeDatabase extends firebase {
           status: "error",
           message: "Error updating data",
           error,
-        },
-        null
+        }
       );
     }
   }
