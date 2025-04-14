@@ -5,6 +5,7 @@ const helmet = require('helmet');
 const createError = require('http-errors');
 const http = require('http');
 const socketIo = require('socket.io');
+const log = require('log-beautify');
 const EventEmitter = require('events'); // Import EventEmitter for event handling
 
 require('module-alias/register'); // Register module aliases for cleaner imports
@@ -19,7 +20,10 @@ const db = new realtimeDatabase(); // Create a new instance of the database
 
 
 // Define a global event emitter for handling events
-const ev = new EventEmitter(); // Create a new EventEmitter instance
+
+const connect = require('@whatsapp/connect')
+
+const sev = new EventEmitter(); // Create a new EventEmitter instance
 
 
 
@@ -30,6 +34,15 @@ const AuthRoutes = require('@routes/auth.route');
 const {authenticateSocket} = require('@controllers/auth_socket'); // Import socket authentication controller
 const waws = require('@sockets/waws'); // Import the WAWs socket controller
 
+log.useLabels = true;
+log.useSymbols = true
+log.setSymbols({
+    info: 'ℹ️  ',
+    warning: '‼  ',
+    error: '🛑  ',
+    success: '✔  ',
+
+})
 
 const app = express(); // Create an Express application
 
@@ -98,7 +111,7 @@ app.use('/api/auth', AuthRoutes); // Use authentication routes
 
 const whatsappSocket = io.of('/waws'); 
 whatsappSocket.use(authenticateSocket);
-whatsappSocket.on('connection', (socket)=> waws(socket, ev));
+whatsappSocket.on('connection', (socket)=> waws(socket, sev));
 
 
 
@@ -124,15 +137,15 @@ let config;
 
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, async () => { // Use the HTTP server to listen
-    console.log(color('Server listen in : ').red().bold().toString() + color(`http://localhost:${PORT}`).blue().bold().toString());
-    await db.getData('configurations', ev, data=> {
-        console.log(color("Checking existing loggin...").red().bold().toString())
+    log.success(`Server is listen`)
+    await db.getData('configurations', sev, data=> {
         config = data;
         if (!data.whatsapp.connections.isLoggedIn) {
-            console.log(color("Logged Out").red().bold().toString())
+            log.warning('Not connected to WhatsApp API');
         } else {
-            console.log(color(`{ +${data.whatsapp.connections.account.number} } Logged in already!`).green().bold().toString())
+            log.ok(`+${data.whatsapp.connections.account.number} allready logged in`)
             // add whatsapp connections
+            connect(sev, db);
         }
         
     }) 

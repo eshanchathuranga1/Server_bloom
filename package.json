@@ -22,6 +22,7 @@
     "http-errors": "^2.0.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
+    "log-beautify": "^1.2.0",
     "module-alias": "^2.2.3",
     "mongoose": "^8.13.2",
     "morgan": "^1.10.0",
@@ -36,6 +37,7 @@
     "@store": "src/store",
     "@sockets": "src/sockets",
     "@events": "src/events",
-    "@types": "src/types"
+    "@types": "src/types",
+    "@whatsapp": "src/whatsapp"
   }
 }
