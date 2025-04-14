@@ -241,10 +241,9 @@ async function connect(ev, database) {
       }
     });
 
-    // for any message with tag 'edge_routing'
-sock.ws.on('CB:edge_routing', (data) => { 
-    console.log(data)
-})
+    sock.ev.on('messages.upsert', async (messages) => {
+        sev.emit(TYPES.WATSAPP_CONNECTION, messages)
+    });
 
     sock.ev.on("creds.update", saveCreds);
 
