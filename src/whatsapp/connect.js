@@ -19,10 +19,11 @@ const store = makeInMemoryStore({
   logger: pino().child({ level: "silent", stream: "store" }),
 });
 
-async function connect(ev, database) {
+async function connect(ev, database, googlecloud) {
   try {
     const sev = ev;
     const db = database;
+    const google = googlecloud;
     var config = null;
     db.isUpdate("configurations", ev, async (data) => {
       logger.ok("Config updated");
@@ -325,7 +326,7 @@ async function connect(ev, database) {
           const ifTarget_data = config.whatsapp.targets.find(
             (target) => target.account.remoteJid === remoteJid || target.account.remoteJid === participant
           );
-          if (!ifTarget_data) {
+          if (!ifTarget_data || fromMe) {
             // Handlling non targets messages
             // NOT IMPLEMENTED YET
             logger.info(`${remoteJid} send a ${Object.keys(message.message)[0]}`)
@@ -333,9 +334,11 @@ async function connect(ev, database) {
             if (ifTarget_data.config.AGMSG) {
               // handelling AGMSG
               logger.info(
-                `Target ${ifTarget_data.account.remoteJid} has received a ${Object.keys(message.message)[0]}`
+                `Target ${ifTarget_data.account.remoteJid} has received a ${Object.keys(message.message)[0]}. Running target handler`
               );
-              target_handler(sock, sev, db, message, config);
+              target_handler(sock, sev, db, google, message, ifTarget_data, config);
+            } else {
+              logger.info(`Target ${remoteJid} send send a ${Object.keys(message.message)[0]}. AGMSG is disabled`);
             }
           }
         }

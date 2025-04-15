@@ -14,7 +14,9 @@ const { verifyAccessToken } = require("@utils/jwt_utils"); // Import JWT utility
 const TYPES = require("@types/events");
 
 const realtimeDatabase = require("@utils/firebase"); // Import therealtime database module
+const GoogleCloud = require('@utils/google')
 const db = new realtimeDatabase(); // Create a new instance of the database
+const google = new GoogleCloud() // Create a new instance of the Google Cloud module
 
 // Define a global event emitter for handling events
 const logger = require("@utils/logger");
@@ -144,7 +146,7 @@ server.listen(PORT, async () => {
     async (data) => {
       if (data.islogedin) {
         logger.ok(`Whatsapp account allready logged in`);
-        connect(sev, db);
+        connect(sev, db, google);
       } else {
         logger.warning("Not connected to WhatsApp API");
       }
