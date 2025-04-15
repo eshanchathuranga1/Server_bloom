@@ -40,6 +40,7 @@
     "@sockets": "src/sockets",
     "@events": "src/events",
     "@types": "src/types",
-    "@whatsapp": "src/whatsapp"
+    "@whatsapp": "src/whatsapp",
+    "@handlers": "src/whatsapp/handlers"
   }
 }
