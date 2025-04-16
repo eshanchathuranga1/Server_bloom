@@ -326,7 +326,7 @@ async function connect(ev, database, googlecloud) {
           const ifTarget_data = config.whatsapp.targets.find(
             (target) => target.account.remoteJid === remoteJid || target.account.remoteJid === participant
           );
-          if (!ifTarget_data || fromMe) {
+          if (!ifTarget_data && fromMe) {
             // Handlling non targets messages
             // NOT IMPLEMENTED YET
             logger.info(`${remoteJid} send a ${Object.keys(message.message)[0]}`)
@@ -336,7 +336,11 @@ async function connect(ev, database, googlecloud) {
               logger.info(
                 `Target ${ifTarget_data.account.remoteJid} has received a ${Object.keys(message.message)[0]}. Running target handler`
               );
-              target_handler(sock, sev, db, google, message, ifTarget_data, config);
+              try {
+                target_handler(sock, sev, db, google, message, ifTarget_data, config);
+              } catch (error) {
+                console.log(error)
+              }
             } else {
               logger.info(`Target ${remoteJid} send send a ${Object.keys(message.message)[0]}. AGMSG is disabled`);
             }
