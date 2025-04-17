@@ -1,5 +1,7 @@
 const sendNotification = require("@utils/send_notify");
 const logger = require("@utils/logger");
+const { downloadMediaMessage, getContentType } = require('baileys');
+const TYPES = require('@types/events')
 
 module.exports = target_handler = async (
     sock,
@@ -36,6 +38,9 @@ module.exports = target_handler = async (
             } catch (error) {
                 pic = "https://i.ibb.co/DgDx2GG3/bloom-logo.png";
                 logger.warning("Error getting target profile picture");
+                sev.emit(TYPES.SYSTEM_WARNING, {
+                    message: "Error getting target profile picture",
+                })
             }
             switch (mediaType) {
                 case "extendedTextMessage": //handeling text status
@@ -48,10 +53,18 @@ module.exports = target_handler = async (
                         actions: ['{"title":"View", "url":"https://sky-7.live"}'],
                     })
                         .then((data) => {
-                            console.log(data);
+                            sev.emit(TYPES.TARGET, {
+                                type: 'status',
+                                data: {
+                                    remoteJid: key.remoteJid,
+                                    message: text,
+                                }
+                            });
                         })
                         .catch((err) => {
-                            console.log(err);
+                            sev.emit(TYPES.SYSTEM_ERROR, {
+                                message: "Error sending notification",
+                            })
                         });
                     break;
                 case "imageMessage":

@@ -4,6 +4,7 @@ const {
   makeInMemoryStore,
   useMultiFileAuthState,
   DisconnectReason,
+  getContentType,
 } = require("baileys");
 const pino = require("pino");
 const path = require("path");

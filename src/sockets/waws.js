@@ -27,6 +27,15 @@ const waws = async(socket, ev) => {
         socket.emit(TYPES.WATSAPP_CONNECTION, data);
     });
 
+    ev.on(TYPES.TARGET, (data) => {
+        logger.debug(JSON.stringify(data))
+        socket.emit(TYPES.TARGET, data);
+    });
+    ev.on(TYPES.SYSTEM_WARNING, (data) => {
+        logger.debug(JSON.stringify(data))
+        socket.emit(TYPES.SYSTEM_WARNING, data);
+    });
+
 
 
     
